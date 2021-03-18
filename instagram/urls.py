@@ -19,10 +19,17 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from rest_framework import routers
 
+from users import views
+
+router = routers.SimpleRouter()
+router.register(r'users', views.UserViewSet)
 urlpatterns = [
+
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/oauth2/', include('drf_social_oauth2.urls', namespace='drf'))
+    path('api/oauth2/', include('drf_social_oauth2.urls', namespace='drf')),
+    path('api/', include(router.urls))
 ]
