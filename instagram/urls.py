@@ -32,5 +32,5 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include(router.urls)),
-    re_path(r'^auth/', include('rest_framework_social_oauth2.urls')),
+    url(r'^auth/', include('drf_social_oauth2.urls', namespace='drf')),
 ]

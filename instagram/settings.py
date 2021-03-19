@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'oauth2_provider',
     'social_django',
-    'rest_framework_social_oauth2',
+    'drf_social_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -131,10 +131,9 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
 
     )
 }
@@ -144,7 +143,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',
     'social_core.backends.facebook.FacebookAppOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'drf_social_oauth2.backends.DjangoOAuth2',
     'social_core.backends.google.GoogleOAuth2'
 )
 
@@ -166,6 +165,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-ACTIVATE_JWT = True
+ACTIVATE_JWT = False
 
 AUTH_USER_MODEL = 'users.User'
