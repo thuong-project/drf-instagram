@@ -1,28 +1,34 @@
 from rest_access_policy import AccessPolicy
 
-NON_SAFE_METHODS = ["update", "partial_update", "destroy"]
-SAFE_METHODS = ["create", "retrieve"]
-
 
 class UserProfileAccessPolicy(AccessPolicy):
     statements = [
         {
-            "action": SAFE_METHODS,
+            "action": ["create"],
             "principal": "*",
             "effect": "allow"
         },
         {
-            "action": NON_SAFE_METHODS,
+            "action": ["retrieve", "me"],
+            "principal": "authenticated",
+            "effect": "allow"
+        },
+        {
+
+            "action": ["update", "partial_update", "destroy"],
             "principal": ["*"],
             "effect": "allow",
-            "condition": "is_owner_or_in_admin_group"
+            "condition": ["(is_owner or in_admin_group)"]
         },
         {
             "action": ["list"],
-            "principal": ["group:admin"],
-            "effect": "allow"
+            "principal": "group:admin",
+            "effect": "allow",
         }
     ]
 
-    def is_owner_or_in_admin_group(self, request, view, action) -> bool:
-        return view.get_object() == request.user or request.user.groups.filter(name='admin').exists()
+    def in_admin_group(self, request, view, action) -> bool:
+        return request.user.groups.filter(name='admin').exists()
+
+    def is_owner(self, request, view, action) -> bool:
+        return view.get_object() == request.user

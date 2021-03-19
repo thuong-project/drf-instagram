@@ -2,12 +2,13 @@ from rest_framework import serializers
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from .models import UserProfile, User
+from django.utils.translation import gettext_lazy as _
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['date_of_birth', 'address']
+        fields = ['address']
 
 
 class UserSerializer(WritableNestedModelSerializer):
@@ -31,7 +32,7 @@ class UserSerializer(WritableNestedModelSerializer):
 
     def update(self, instance, validated_data):
         if 'username' in validated_data:
-            del validated_data['username']
+            raise serializers.ValidationError({"username": _("Username can not change")})
         user = super().update(instance, validated_data)
         if 'password' in validated_data:
             user.set_password(validated_data['password'])

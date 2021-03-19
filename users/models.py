@@ -20,5 +20,5 @@ class User(AbstractUser):
 
 class UserProfile(models.Model):
     address = models.CharField(max_length=100, blank=True)
-    date_of_birth = models.DateField(blank=True)
+    #date_of_birth = models.DateField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
