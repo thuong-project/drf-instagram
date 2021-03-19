@@ -134,8 +134,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'drf_social_oauth2.authentication.SocialAuthentication',
-
-    )
+        ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
 AUTHENTICATION_BACKENDS = (
