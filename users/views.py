@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from .models import User, UserProfile
 from .access_policy import UserProfileAccessPolicy
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserProfileSerializer
 from rest_framework.response import Response
 
 
@@ -17,3 +17,15 @@ class UserViewSet(viewsets.ModelViewSet):
         me = request.user
         serializer = self.get_serializer(me)
         return Response(serializer.data)
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    # permission_classes = (UserProfileAccessPolicy,)
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
+
+    # @action(detail=False)
+    # def me(self, request):
+    #     me = request.user
+    #     serializer = self.get_serializer(me)
+    #     return Response(serializer.data)

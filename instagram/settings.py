@@ -168,3 +168,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 ACTIVATE_JWT = False
 
 AUTH_USER_MODEL = 'users.User'
+
+MEDIA_ROOT = environ.os.path.join(BASE_DIR, 'media')
+print(MEDIA_ROOT)
+MEDIA_URL = '/media/' # 'http://myhost:port/media/'

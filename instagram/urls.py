@@ -23,9 +23,12 @@ from rest_framework import routers
 from django.conf.urls import url
 
 from users import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 router = routers.SimpleRouter()
 router.register(r'users', views.UserViewSet)
+router.register(r'userprofile', views.UserProfileViewSet)
 urlpatterns = [
 
     path('admin/', admin.site.urls),
@@ -34,3 +37,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     url(r'^auth/', include('drf_social_oauth2.urls', namespace='drf')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
