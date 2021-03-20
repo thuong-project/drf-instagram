@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'drf_social_oauth2.authentication.SocialAuthentication',
-        ),
+    ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
@@ -171,4 +171,11 @@ AUTH_USER_MODEL = 'users.User'
 
 MEDIA_ROOT = environ.os.path.join(BASE_DIR, 'media')
 print(MEDIA_ROOT)
-MEDIA_URL = '/media/' # 'http://myhost:port/media/'
+MEDIA_URL = '/media/'  # 'http://myhost:port/media/'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+AWS_ACCESS_KEY_ID= env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
