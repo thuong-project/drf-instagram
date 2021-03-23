@@ -1,7 +1,7 @@
 from rest_access_policy import AccessPolicy
 
 
-class UserProfileAccessPolicy(AccessPolicy):
+class UserAccessPolicy(AccessPolicy):
     statements = [
         {
             "action": ["create"],

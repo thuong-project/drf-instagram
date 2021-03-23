@@ -13,27 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from rest_framework_nested import routers
 
-from django.contrib import admin
-from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from users import views
 
-from users import urls as user_urls
+router = routers.SimpleRouter()
+router.register(r'users', views.UserViewSet)
+#users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
+#users_router.register(r'profile', views.UserProfileViewSet)
 
-urls = [
-    path('', include(user_urls.urls)),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auth/', include('drf_social_oauth2.urls', namespace='drf'))
-]
-
-urlpatterns = [
-    path('api/', include(urls)),
-    path('admin/', admin.site.urls),
-
-]
-
-
+urls = router.urls
