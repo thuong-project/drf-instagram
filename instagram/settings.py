@@ -42,11 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'users.apps.UsersConfig',
+    'posts.apps.PostsConfig',
+    'images.apps.ImagesConfig',
+
     'django_extensions',
     'oauth2_provider',
     'social_django',
     'drf_social_oauth2',
+    'debug_toolbar',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +63,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware'
+    'django.middleware.locale.LocaleMiddleware',
+    # ...
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # ...
 ]
 
 ROOT_URLCONF = 'instagram.urls'
@@ -173,14 +182,53 @@ MEDIA_ROOT = environ.os.path.join(BASE_DIR, 'media')
 print(MEDIA_ROOT)
 MEDIA_URL = '/media/'  # 'http://myhost:port/media/'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-#STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
-AWS_ACCESS_KEY_ID= env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=7),
-
 }
+
+DEBUG = True
+
+# LOGGING = {
+#     'version': 1,
+#     'formatters': {
+#         'sqlformatter': {
+#             '()': 'ddquery.SqlFormatter',
+#             'format': '%(levelname)s %(message)s',
+#             'highlight': False
+#         },
+#     },
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'sqlformatter',
+#         }
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
+
+SHOW_TOOLBAR_CALLBACK = True

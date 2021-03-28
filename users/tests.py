@@ -11,7 +11,7 @@ from instagram.settings import env
 
 class UserTests(APITestCase):
     def test_create_user(self):
-        url = reverse('user-list')
+        url = reverse('users-list')
         data = {'username': 'test0', 'password': '111111'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

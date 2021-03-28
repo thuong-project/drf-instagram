@@ -13,13 +13,3 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from rest_framework_nested import routers
-
-from users import views
-
-router = routers.SimpleRouter()
-router.register(r'users', views.UserViewSet)
-#users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
-#users_router.register(r'profile', views.UserProfileViewSet)
-
-urls = router.urls
