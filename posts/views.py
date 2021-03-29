@@ -13,7 +13,15 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(user=self.kwargs['user_pk'])
+        qs = Post.objects
+        if 'user_pk' in self.kwargs:
+            qs = qs.filter(user=self.kwargs['user_pk'])
+        return qs
 
     def perform_create(self, serializer):
-        serializer.save(user_id=self.kwargs['user_pk'])
+        add = dict()
+        if 'user_pk' in self.kwargs:
+            add['user_id'] = self.kwargs['user_pk']
+        else:
+            add['user_id'] = self.request.user.id
+        serializer.save(**add)

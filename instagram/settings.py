@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',
     'images.apps.ImagesConfig',
+    'comments.apps.CommentsConfig',
+    'likes.apps.LikesConfig',
 
     'django_extensions',
     'oauth2_provider',
@@ -201,7 +203,7 @@ DEBUG = True
 #         'sqlformatter': {
 #             '()': 'ddquery.SqlFormatter',
 #             'format': '%(levelname)s %(message)s',
-#             'highlight': False
+#             'highlight': True
 #         },
 #     },
 #     'filters': {

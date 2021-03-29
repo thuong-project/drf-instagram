@@ -3,14 +3,21 @@ from rest_access_policy import AccessPolicy
 from users.models import User
 
 
-class PostAccessPolicy(AccessPolicy):
+class CommentAccessPolicy(AccessPolicy):
     statements = [
         {
-            "action": ["create", "partial_update", "update", "destroy"],
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["has_commentable_pk"]
+        },
+        {
+            "action": ["partial_update", "update", "destroy"],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["(is_owner or in_admin_group)"]
         },
+
         {
             "action": ["retrieve"],
             "principal": "authenticated",
@@ -20,7 +27,7 @@ class PostAccessPolicy(AccessPolicy):
             "action": ["list"],
             "principal": "authenticated",
             "effect": "allow",
-            "condition": ["(has_user_pk or in_admin_group)"]
+            "condition": ["(has_commentable_pk or in_admin_group)"]
         },
     ]
 
@@ -28,16 +35,13 @@ class PostAccessPolicy(AccessPolicy):
         return request.user.groups.filter(name='admin').exists()
 
     def is_owner(self, request, view, action) -> bool:
-        if action == "create":
-            if 'user_pk' in view.kwargs:
-                return request.user.id == int(view.kwargs['user_pk'])
-            else:
-                return True
-        else:
-            return view.get_object().user_id == request.user.id
 
-    def has_user_pk(self, request, view, action):
-        if 'user_pk' in view.kwargs:
+        return view.get_object().user_id == request.user.id
+
+    def has_commentable_pk(self, request, view, action):
+        if 'post_pk' in view.kwargs or 'comment_pk' in view.kwargs:
             return True
         else:
             return False
+
+
