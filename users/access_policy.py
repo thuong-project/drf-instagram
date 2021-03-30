@@ -9,7 +9,7 @@ class UserAccessPolicy(AccessPolicy):
             "effect": "allow"
         },
         {
-            "action": ["retrieve", "me"],
+            "action": ["retrieve", "me", "list"],
             "principal": "authenticated",
             "effect": "allow"
         },
@@ -19,11 +19,6 @@ class UserAccessPolicy(AccessPolicy):
             "principal": ["*"],
             "effect": "allow",
             "condition": ["(is_owner or in_admin_group)"]
-        },
-        {
-            "action": ["list"],
-            "principal": "group:admin",
-            "effect": "allow",
         }
     ]
 

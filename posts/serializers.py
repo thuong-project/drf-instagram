@@ -13,9 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'content', 'image_set', 'number_of_likes', 'number_of_comments', 'parent_post']
 
-    # TODO: performance ?
     def create(self, validated_data):
-        print(validated_data)
         images = []
         if "image_set" in validated_data:
             images = validated_data.pop('image_set')

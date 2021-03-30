@@ -118,8 +118,10 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-# .env
-instagram/.env/
+
+.env
+.env.*
+*.env
 .venv/
 env/
 venv/
@@ -309,7 +311,7 @@ fabric.properties
 # SageMath parsed files
 
 # Environments
-instagram/.env
+instagram/.production.env
 
 # Spyder project settings
 

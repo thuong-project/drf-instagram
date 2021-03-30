@@ -9,13 +9,27 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+
 from datetime import timedelta
 from pathlib import Path
 import environ
 
 env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
+    # set casting, default value. Ex: DJANGO_DEBUG=(bool, True),
+    ENVIRONMENT=(str, 'development'),
+    DEBUG=(bool, True),
+    SECRET_KEY=(str, r'$njg(dw-(gtg)4ekloxx=ux7djcatpqocti_s0shq+e2#%kc!#'),
+    DATABASE_URL=(str, r'sqlite:////full/path/to/your/database/file.sqlite'),
+    LANGUAGE_CODE=(str, 'vi'),
+    ACTIVATE_JWT=(bool, False),
+    SOCIAL_AUTH_FACEBOOK_KEY=(str, ''),
+    SOCIAL_AUTH_FACEBOOK_SECRET=(str, ''),
+    FB_ACCESS_TOKEN=(str, ''),
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=(str, ''),
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=(str, ''),
+    AWS_ACCESS_KEY_ID=(str, ''),
+    AWS_SECRET_ACCESS_KEY=(str, ''),
+    AWS_STORAGE_BUCKET_NAME=(str, ''),
 )
 environ.Env.read_env()
 
@@ -26,10 +40,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'tnm+7$#mr4nwi=n44(%^y((yx_snk-$(^i3kk)@9!b&el&2ece'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -55,6 +69,7 @@ INSTALLED_APPS = [
     'drf_social_oauth2',
     'debug_toolbar',
     'django_cleanup.apps.CleanupConfig',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +84,7 @@ MIDDLEWARE = [
     # ...
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     # ...
+    'request_logging.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'instagram.urls'
@@ -98,10 +114,10 @@ WSGI_APPLICATION = 'instagram.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
+    'default': env.db('DATABASE_URL'),
+    # read os.environ['SQLITE_URL']
+    # 'extra': env.db('SQLITE_URL', default='sqlite:////tmp/my-tmp-sqlite.db')
 }
 
 # Password validation
@@ -125,7 +141,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'vi'
+LANGUAGE_CODE = env('LANGUAGE_CODE')
 
 TIME_ZONE = 'UTC'
 
@@ -146,7 +162,10 @@ REST_FRAMEWORK = {
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'drf_social_oauth2.authentication.SocialAuthentication',
     ),
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -176,7 +195,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-ACTIVATE_JWT = False
+ACTIVATE_JWT = env('ACTIVATE_JWT')
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -195,37 +214,50 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=7),
 }
 
-DEBUG = True
-
-# LOGGING = {
-#     'version': 1,
-#     'formatters': {
-#         'sqlformatter': {
-#             '()': 'ddquery.SqlFormatter',
-#             'format': '%(levelname)s %(message)s',
-#             'highlight': True
-#         },
-#     },
-#     'filters': {
-#         'require_debug_true': {
-#             '()': 'django.utils.log.RequireDebugTrue',
-#         }
-#     },
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'filters': ['require_debug_true'],
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'sqlformatter',
-#         }
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console'],
-#         }
-#     }
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'sqlformatter': {
+            '()': 'ddquery.SqlFormatter',
+            'format': '%(levelname)s %(message)s',
+            'highlight': True
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console-db': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'sqlformatter',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console-db'],
+        },
+        # 'django.server': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console']
+        # },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # change debug level as appropiate
+            'propagate': False,
+        },
+    }
+}
 
 INTERNAL_IPS = [
     # ...
@@ -233,4 +265,9 @@ INTERNAL_IPS = [
     # ...
 ]
 
-SHOW_TOOLBAR_CALLBACK = True
+ALLOWED_HOSTS = ['*']
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda r: True if DEBUG else lambda r: False,  # disables it
+    # '...
+}

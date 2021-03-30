@@ -14,7 +14,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'content', 'image_set', 'number_of_likes',
                   'number_of_comments', 'post_id', 'parent_comment_id', 'user_id']
 
-    # TODO: performance ?
     def create(self, validated_data):
         print(validated_data)
         images = []
