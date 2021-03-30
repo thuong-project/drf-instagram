@@ -18,7 +18,7 @@ env = environ.Env(
     # set casting, default value. Ex: DJANGO_DEBUG=(bool, True),
     ENVIRONMENT=(str, 'development'),
     DEBUG=(bool, True),
-    SECRET_KEY=(str, r'$njg(dw-(gtg)4ekloxx=ux7djcatpqocti_s0shq+e2#%kc!#'),
+    SECRET_KEY=(str, r'h#(pb@2_)viux4ze8wqit=j6di@1jly6_s4zte5dm4bh9jv7yl'),
     DATABASE_URL=(str, r'sqlite:////full/path/to/your/database/file.sqlite'),
     LANGUAGE_CODE=(str, 'vi'),
     ACTIVATE_JWT=(bool, False),
