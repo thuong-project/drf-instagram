@@ -1,4 +1,4 @@
-## 1.Introduce
+## 1.Introduction
 **This is an Api server for Photo sharing social network like Instagram built with Django REST Framework and deployed to Heroku.** 
 
 **I made this app to practice Django Framework.**
