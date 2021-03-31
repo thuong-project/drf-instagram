@@ -14,6 +14,9 @@ from datetime import timedelta
 from pathlib import Path
 import environ
 
+
+
+
 env = environ.Env(
     # set casting, default value. Ex: DJANGO_DEBUG=(bool, True),
     ENVIRONMENT=(str, 'development'),
@@ -164,7 +167,7 @@ USE_TZ = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'custom_authenticate.authenticate.CustomJWTAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'drf_social_oauth2.authentication.SocialAuthentication',
     ),
