@@ -32,6 +32,6 @@ class CommentSerializer(serializers.ModelSerializer):
             images = validated_data.pop('image_set')
             comment.image_set.all().delete()
             for image in images:
-                Image.objects.create(post=comment, **image)
+                Image.objects.create(comment=comment, **image)
         instance = super().update(comment, validated_data)
         return instance

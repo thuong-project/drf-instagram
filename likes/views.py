@@ -18,7 +18,7 @@ class LikeView(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.Retrieve
     def get_queryset(self):
         qs = Like.objects.all()
         if 'post_pk' in self.kwargs:
-            qs = qs.filter(post_id=self.kwargs['user_pk'])
+            qs = qs.filter(post_id=self.kwargs['post_pk'])
         if 'comment_pk' in self.kwargs:
             qs = qs.filter(comment_id=self.kwargs['comment_pk'])
 

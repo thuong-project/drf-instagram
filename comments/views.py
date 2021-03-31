@@ -17,7 +17,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = Comment.objects.all()
         if 'post_pk' in self.kwargs:
-            qs = qs.filter(post_id=self.kwargs['user_pk'])
+            qs = qs.filter(post_id=self.kwargs['post_pk'])
         if 'comment_pk' in self.kwargs:
             qs = qs.filter(parent_comment_id=self.kwargs['comment_pk'])
 
