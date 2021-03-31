@@ -33,6 +33,7 @@ router = routers.SimpleRouter()
 router.register(r'users', usersViews.UserViewSet, basename="user")
 router.register(r'posts', postsViews.PostViewSet, basename="post")
 router.register(r'comments', commentsViews.CommentViewSet, basename="comment")
+router.register(r'likes', likesViews.LikeView, basename="like")
 
 users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
 users_router.register(r'posts', postsViews.PostViewSet, basename='user-post')
