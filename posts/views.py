@@ -13,7 +13,7 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        qs = Post.objects
+        qs = Post.objects.all()
         if 'user_pk' in self.kwargs:
             qs = qs.filter(user=self.kwargs['user_pk'])
         return qs

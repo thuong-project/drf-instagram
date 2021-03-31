@@ -15,7 +15,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        qs = Comment.objects
+        qs = Comment.objects.all()
         if 'post_pk' in self.kwargs:
             qs = qs.filter(post_id=self.kwargs['user_pk'])
         if 'comment_pk' in self.kwargs:

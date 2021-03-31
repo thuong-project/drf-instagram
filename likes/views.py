@@ -16,7 +16,7 @@ class LikeView(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.Retrieve
     permission_classes = (LikeAccessPolicy,)
 
     def get_queryset(self):
-        qs = Like.objects
+        qs = Like.objects.all()
         if 'post_pk' in self.kwargs:
             qs = qs.filter(post_id=self.kwargs['user_pk'])
         if 'comment_pk' in self.kwargs:

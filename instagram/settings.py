@@ -19,7 +19,7 @@ env = environ.Env(
     ENVIRONMENT=(str, 'development'),
     DEBUG=(bool, True),
     SECRET_KEY=(str, r'h#(pb@2_)viux4ze8wqit=j6di@1jly6_s4zte5dm4bh9jv7yl'),
-    DATABASE_URL=(str, r'sqlite:////full/path/to/your/database/file.sqlite'),
+    DATABASE_URL=(str, r'sqlite://../db.sqlite3'),
     LANGUAGE_CODE=(str, 'vi'),
     ACTIVATE_JWT=(bool, False),
     SOCIAL_AUTH_FACEBOOK_KEY=(str, ''),
@@ -30,11 +30,14 @@ env = environ.Env(
     AWS_ACCESS_KEY_ID=(str, ''),
     AWS_SECRET_ACCESS_KEY=(str, ''),
     AWS_STORAGE_BUCKET_NAME=(str, ''),
+    DEFAULT_FILE_STORAGE=(str, 'django.core.files.storage.FileSystemStorage'),
+    STATICFILES_STORAGE=(str, 'whitenoise.storage.CompressedManifestStaticFilesStorage')
 )
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env.read_env(env.str('ENV_PATH', '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -45,7 +48,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -73,7 +76,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # ...
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -154,7 +161,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -203,9 +209,6 @@ MEDIA_ROOT = environ.os.path.join(BASE_DIR, 'media')
 print(MEDIA_ROOT)
 MEDIA_URL = '/media/'  # 'http://myhost:port/media/'
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
@@ -238,7 +241,7 @@ LOGGING = {
         },
         'console': {
             'level': 'DEBUG',
-            'filters': ['require_debug_true'],
+            'filters': [],
             'class': 'logging.StreamHandler',
         }
     },
@@ -247,10 +250,10 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console-db'],
         },
-        # 'django.server': {
-        #     'level': 'DEBUG',
-        #     'handlers': ['console']
-        # },
+        'django.server': {
+            'level': 'DEBUG',
+            'handlers': ['console']
+        },
         'django.request': {
             'handlers': ['console'],
             'level': 'DEBUG',  # change debug level as appropiate
@@ -265,9 +268,12 @@ INTERNAL_IPS = [
     # ...
 ]
 
-ALLOWED_HOSTS = ['*']
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda r: True if DEBUG else lambda r: False,  # disables it
+    'SHOW_TOOLBAR_CALLBACK': lambda r: DEBUG,  # disables it
     # '...
 }
+STATIC_URL = '/static/'
+STATIC_ROOT = environ.os.path.join(BASE_DIR, 'static')
+STATICFILES_STORAGE = env('STATICFILES_STORAGE')
+DEFAULT_FILE_STORAGE = env('DEFAULT_FILE_STORAGE')
