@@ -11,7 +11,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        management.call_command("reset_db", "--noinput")
+
         management.call_command("makemigrations")
         management.call_command("migrate")
 
