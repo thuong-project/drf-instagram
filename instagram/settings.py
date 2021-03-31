@@ -241,7 +241,7 @@ LOGGING = {
         },
         'console': {
             'level': 'DEBUG',
-            'filters': [],
+            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         }
     },
@@ -250,10 +250,10 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console-db'],
         },
-        'django.server': {
-            'level': 'DEBUG',
-            'handlers': ['console']
-        },
+        # 'django.server': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console']
+        # },
         'django.request': {
             'handlers': ['console'],
             'level': 'DEBUG',  # change debug level as appropiate
