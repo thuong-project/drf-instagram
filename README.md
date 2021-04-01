@@ -3,8 +3,8 @@
 
 **I made this app to practice with Django Framework.**
 
-Link App: https://django-instagram-api.herokuapp.com/  
-Link Postman API:
+Link Postman API: https://www.postman.com/galactic-trinity-351275/workspace/django-instagram/overview
+
 ## 2.Features
 ***Current***  
 1. **Authentication**
